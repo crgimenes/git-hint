@@ -87,7 +87,8 @@ The status of the repository:
 %v
 %v
 %v
-Write the git commands suggesting commit message to commit your changes.`
+Write as if you were typing the necessary git commands in the terminal to commit the changes to an appropriately named branch creating commits with insightful but concise descriptions in the present tense.
+`
 
 	prompt = fmt.Sprintf(
 		prompt,
@@ -116,4 +117,6 @@ Write the git commands suggesting commit message to commit your changes.`
 		log.Printf("GPT-3 error: %v", err)
 		return
 	}
+
+	fmt.Println()
 }
