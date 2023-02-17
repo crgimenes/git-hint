@@ -87,8 +87,7 @@ The status of the repository:
 %v
 %v
 %v
-Write the git commands and commit message to commit your changes.
-	`
+Write the git commands suggesting commit message to commit your changes.`
 
 	prompt = fmt.Sprintf(
 		prompt,
