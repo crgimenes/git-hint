@@ -37,7 +37,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("dir %q\n", dir)
+	dirBase := filepath.Base(dir)
 
 	////////////////////////////////////////////
 	gitRepo, err := exec.Command("git", "rev-parse", "--show-toplevel").Output()
@@ -48,8 +48,6 @@ func main() {
 	// get base name
 	gitRepoBase := filepath.Base(string(gitRepo))
 
-	fmt.Printf("gitRepo %q\n", gitRepoBase)
-
 	/////////////////////////////////////////////
 
 	// get git branch
@@ -58,8 +56,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("gitBranch %q\n", string(gitBranch))
-
 	///////////////////////////////////////////////
 
 	// exec git get git status
@@ -67,15 +63,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("gitStatus %q\n", string(gitStatus))
 
 	///////////////////////////////////////////////
 	gitDiff, err := exec.Command("git", "diff").Output()
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Printf("gitDiff %q\n", string(gitDiff))
 
 	diff := ""
 	if len(gitDiff) > 0 {
@@ -84,24 +77,30 @@ func main() {
 		diff = fmt.Sprintf(p, diff)
 	}
 
-	prompt := `The current directory is "%v" and the current git branch is "%v" of the repository "%v".
-	The status of the repository:
-	%v
-	%v
-	Write the git commands including names and comments to create a branch 
-	and commits as if you were the programmer typing them in the terminal.
+	suggestNewBranch := ""
+	if string(gitBranch) == "master" || string(gitBranch) == "main" {
+		suggestNewBranch = "You should create a new branch for your changes."
+	}
+
+	prompt := `The current directory is "%v" and the current branch is "%v" of the repository "%v".
+The status of the repository:
+%v
+%v
+%v
+Write the git commands and commit message to commit your changes.
 	`
 
 	prompt = fmt.Sprintf(
 		prompt,
-		dir,
+		dirBase,
 		string(gitBranch),
 		gitRepoBase,
 		string(gitStatus),
 		diff,
+		suggestNewBranch,
 	)
 
-	fmt.Printf("prompt %s\n", prompt)
+	//fmt.Printf("prompt %s\n", prompt)
 
 	//buf := strings.Builder{}
 	err = client.CompletionStreamWithEngine(ctx, gpt3.TextDavinci003Engine, gpt3.CompletionRequest{
@@ -109,7 +108,7 @@ func main() {
 			prompt,
 		},
 		MaxTokens:   gpt3.IntPtr(1000),
-		Temperature: gpt3.Float32Ptr(0.6),
+		Temperature: gpt3.Float32Ptr(1.3),
 	}, func(resp *gpt3.CompletionResponse) {
 		//buf.WriteString(resp.Choices[0].Text)
 		fmt.Print(resp.Choices[0].Text)
