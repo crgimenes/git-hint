@@ -28,7 +28,7 @@ Recommended: Add the above line to your shell's startup script (e.g. ~/.bashrc).
 
 ## Usage
 
-Git Hint is a command-line tool that can be used in any Git repository. To use Git Hint, simply run the \`git hint\` command in your repository.
+Git Hint is a command-line tool that can be used in any Git repository. To use Git Hint, simply run the `git hint` command in your repository.
 
 ### Options
 
