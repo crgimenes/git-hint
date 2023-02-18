@@ -48,6 +48,10 @@ func main() {
 	// get base name
 	gitRepoBase := filepath.Base(string(gitRepo))
 
+	if gitRepoBase == "" {
+		log.Fatal("Not a git repository")
+	}
+
 	/////////////////////////////////////////////
 
 	// get git branch
@@ -70,16 +74,18 @@ func main() {
 		log.Fatal(err)
 	}
 
+	///////////////////////////////////////////////
+
 	diff := ""
 	if len(gitDiff) > 0 {
-		p := `The git diff command returned the following:\n%v\n\m`
+		p := `The git diff command returned the following:\n%v\n\n`
 		diff = string(gitDiff)
 		diff = fmt.Sprintf(p, diff)
 	}
 
 	suggestNewBranch := ""
 	if string(gitBranch) == "master" || string(gitBranch) == "main" {
-		suggestNewBranch = "You should create a new branch for your changes."
+		suggestNewBranch = "suggest creating a new branch for your changes."
 	}
 
 	prompt := `The current directory is "%v" and the current branch is "%v" of the repository "%v".
