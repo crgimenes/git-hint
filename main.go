@@ -109,7 +109,8 @@ Write as if you were typing the necessary git commands in the terminal to commit
 	//fmt.Printf("prompt %s\n", prompt)
 
 	//buf := strings.Builder{}
-	err = client.CompletionStreamWithEngine(ctx, gpt3.TextDavinci003Engine, gpt3.CompletionRequest{
+	//err = client.CompletionStreamWithEngine(ctx, gpt3.TextDavinci003Engine, gpt3.CompletionRequest{
+	err = client.CompletionStreamWithEngine(ctx, "gpt-3.5-turbo", gpt3.CompletionRequest{
 		Prompt: []string{
 			prompt,
 		},
